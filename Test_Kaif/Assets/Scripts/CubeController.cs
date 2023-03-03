@@ -9,7 +9,7 @@ namespace Assets.Scripts {
     {
         public static CubeController Inst;
         [SerializeField] public PlayGroundController playGroundController;
-        [SerializeField] private MovingCube _cubeGO;    //  temp
+        [SerializeField] private MovingCube _cubePrefab;    //  temp
         [SerializeField] private List<MovingCube> _cubesList = new List<MovingCube>();
         [SerializeField] private Transform rootCube;
         private List<CountdownTimer> _timersList = new List<CountdownTimer>();
@@ -21,7 +21,7 @@ namespace Assets.Scripts {
             set
             {
                 _destroyedCubesCounter = value;
-                _onCubeDestroyCount.Invoke(_destroyedCubesCounter);
+                _onCubeDestroyCount?.Invoke(_destroyedCubesCounter);
             }
         }
 
@@ -32,6 +32,8 @@ namespace Assets.Scripts {
                 Inst = this;
             }
         }
+
+       
 
         public void Start()
         {
@@ -61,11 +63,12 @@ namespace Assets.Scripts {
         [ContextMenu("CreateCube")]
         public void CreateCube()
         {
-            var newCube = Instantiate(_cubeGO);                //  TODO: pool
+            var newCube = PoolManager.Inst.GetCubeFromPull(_cubePrefab);
             newCube.transform.SetParent(rootCube);
             Vector3 planePos = playGroundController.GetRandomPoint();
-            newCube.transform.localPosition = planePos;
-            newCube.SetCubeController(this);
+            newCube.transform.position = planePos;
+            newCube.gameObject.SetActive(true);
+            newCube.Setup(this);
             _cubesList.Add(newCube);
         }
 

@@ -10,7 +10,7 @@ public class BallController : MonoBehaviour
 {
     public static BallController Inst;
     [SerializeField] private RaycastController _raycastController;
-    [SerializeField] private Ball _ball;
+    [SerializeField] private Ball _ballPrefab;
     [SerializeField] private Transform _spawnPoint;                         //  ball spawning point
     private bool _isBallReady = true;
     private CountdownTimer _coolDownTimer = new CountdownTimer();           // for shoots
@@ -27,7 +27,7 @@ public class BallController : MonoBehaviour
             {
                 _ballCreatingTimer.Setup(MainController.Inst.globalParams.coolDownForNewBall, () => BallCounter++);
             }
-            _onBallsAmountChange.Invoke(BallCounter);
+            _onBallsAmountChange?.Invoke(BallCounter);
         }
     }
 
@@ -44,6 +44,7 @@ public class BallController : MonoBehaviour
     {
         _raycastController.SubscribeForFindingTarget(ShootBall);
         BallCounter = 1;
+        _ballCreatingTimer.SubscribeForTime(UIController.Inst.ChangeTimerToNextBall);
     }
 
     private void ShootBall(RaycastHit raycastHit)
@@ -52,9 +53,12 @@ public class BallController : MonoBehaviour
         {
             return;
         }
-        var ball = Instantiate(_ball, _spawnPoint);
+
+        var ball = PoolManager.Inst.GetBallFromPull(_ballPrefab);
+        ball.transform.SetParent(_spawnPoint);
         Vector3 endPos = raycastHit.point;
-        ball.SetDestination(_spawnPoint.position, endPos, () => CubeController.Inst.CheckDestroyingCubes(endPos, MainController.Inst.globalParams.ballRadiusOfBlast));
+        ball.SetDestination(_spawnPoint.position, endPos,
+            () => CubeController.Inst.CheckDestroyingCubes(endPos, MainController.Inst.globalParams.ballRadiusOfBlast));
         BallCounter--;
         _isBallReady = false;
         _coolDownTimer.Setup(MainController.Inst.globalParams.coolDownForShoot, () => _isBallReady = true); 

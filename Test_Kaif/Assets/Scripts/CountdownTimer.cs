@@ -7,13 +7,27 @@ public class CountdownTimer
 {
     private bool _isCountingAllowed = false;
     private float _countdownTime;
-    private Action _act;
+    private Action _finalAct;           //  action in the end of timer
+    private Action<float> _timerAct;           //  action for time changing
 
-   public void Setup(float time, Action closureAction)
-   {
+    public void Setup(float time, Action closureAction)
+    {
         _countdownTime = time;
-        _act = closureAction;
+        _finalAct = closureAction;
         _isCountingAllowed = true;
+    }
+
+    public void Reset()
+    {
+        _finalAct = null;
+        _timerAct = null;
+        _countdownTime = 0;
+        _isCountingAllowed = false;
+    }
+
+   public void SubscribeForTime(Action<float> act)
+   {
+       _timerAct += act;
    }
 
     public void Countdown()
@@ -25,8 +39,9 @@ public class CountdownTimer
             {
                 _countdownTime = 0;
                 _isCountingAllowed = false;
-                _act?.Invoke();
+                _finalAct?.Invoke();
             }
+            _timerAct?.Invoke(_countdownTime);
         }
     }
 

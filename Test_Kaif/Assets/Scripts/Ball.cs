@@ -9,12 +9,22 @@ public class Ball : MonoBehaviour
     private Vector3 _helpingPos = Vector3.zero;
     private Action _actOnLanding;
 
+    public void Reset()
+    {
+        _helpingPos = Vector3.zero;
+        _ballView.localPosition = _helpingPos;
+        _startPosition = Vector3.zero;
+        _endPosition = Vector3.zero;
+        _actOnLanding = null;
+    }
 
     public void SetDestination(Vector3 startPos, Vector3 endPos, Action actOnLanding)
     {
+        transform.position = startPos;
         _startPosition = startPos;
         _endPosition = endPos;
         _actOnLanding += actOnLanding;
+        gameObject.SetActive(true);
     }
 
     private void Update()
@@ -34,7 +44,8 @@ public class Ball : MonoBehaviour
         if (Vector3.Distance(transform.position, _endPosition) <= 0.5f)
         {
             _actOnLanding.Invoke();
-            Destroy(gameObject);                //  TODO: pool
+            Reset();
+            PoolManager.Inst.PutBallToPool(this);
         }
     }
 

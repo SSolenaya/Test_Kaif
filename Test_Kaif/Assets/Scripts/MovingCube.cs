@@ -25,17 +25,21 @@ namespace Assets.Scripts {
         private CountdownTimer _dashCountdownTimer = new CountdownTimer();
         
 
-        void Start()
+        public void OnEnable()
         {
             SetState(CubeStates.searchingDestination);
         }
 
         public void Reset()
         {
-
+            _currentState = CubeStates.none;
+            _currentSpeed = 0;
+            _currentRotationSpeed = 0;
+            _currentDestination = Vector3.zero;
+            _dashCountdownTimer.Reset();
         }
 
-        public void SetCubeController(CubeController cc)
+        public void Setup(CubeController cc)
         {
             _cubeController = cc;
         }
@@ -190,7 +194,8 @@ namespace Assets.Scripts {
         private void Destruction()
         {
             _cubeController.RecreateCube(this);
-            Destroy(gameObject);                //  bear
+            Reset();
+            PoolManager.Inst.PutCubeToPool(this);
         }
     }
 }

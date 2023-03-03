@@ -19,7 +19,7 @@ MonoBehaviour:
   minRecreatingCubeTime: 1
   maxRecreatingCubeTime: 3
   cubeAmount: 3
-  cubeDashSpeed: 100
+  cubeDashSpeed: 150
   cubeNormalSpeed: 50
   cubeNormalRotationSpeed: 5
   cubeMaxRotationSpeed: 50
@@ -29,5 +29,5 @@ MonoBehaviour:
   cubeDistance: 0.5
   cubeTheorDisToCalculateRotation: 15
   cubeMinRadiusForNewPoint: 80
-  ballSpeed: 350
+  ballSpeed: 400
   ballAmplitude: 150

@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -8,16 +7,16 @@ public class BallsPanelUI : MonoBehaviour
     [SerializeField] private Image _ballSpritePrefab;
     [SerializeField] private List<Image> _ballImgList = new List<Image>(5);
 
-    void Start()
+    public void Setup()
     {
         SetupBallSprites();
     }
 
     private void SetupBallSprites()
     {
-        for( int i = 0; i< MainController.Inst.globalParams.maxBallsAmount; i++)
+        for (int i = 0; i < MainController.Inst.globalParams.maxBallsAmount; i++)
         {
-            var ballSprite = Instantiate(_ballSpritePrefab, transform);
+            Image ballSprite = Instantiate(_ballSpritePrefab, transform);
             ballSprite.color = Color.white;
             _ballImgList.Add(ballSprite);
         }

@@ -1,9 +1,6 @@
 using System;
-using System.Numerics;
 using UnityEngine;
-using Quaternion = UnityEngine.Quaternion;
 using Random = UnityEngine.Random;
-using Vector3 = UnityEngine.Vector3;
 
 public enum CubeStates
 {
@@ -14,18 +11,17 @@ public enum CubeStates
     none
 }
 
-namespace Assets.Scripts {
+namespace Assets.Scripts
+{
     public class MovingCube : MonoBehaviour
     {
-        [SerializeField] private CubeStates _currentState;
-        private CubeController _cubeController;
+        private CubeStates _currentState;
         private float _currentSpeed;
         private float _currentRotationSpeed;
         private Vector3 _currentDestination;
         private CountdownTimer _dashCountdownTimer = new CountdownTimer();
-        
 
-        public void OnEnable()
+        private void OnEnable()
         {
             SetState(CubeStates.searchingDestination);
         }
@@ -39,11 +35,6 @@ namespace Assets.Scripts {
             _dashCountdownTimer.Reset();
         }
 
-        public void Setup(CubeController cc)
-        {
-            _cubeController = cc;
-        }
-
         private void SetDestination()
         {
             Vector3 tempVec;
@@ -51,7 +42,7 @@ namespace Assets.Scripts {
             int count = 0;
             do
             {
-                tempVec = _cubeController.playGroundController.GetRandomPoint();
+                tempVec = PlayGroundController.Inst.GetRandomPoint();
                 count++;
                 if (count > 10)
                 {
@@ -67,42 +58,39 @@ namespace Assets.Scripts {
             }
         }
 
-        [ContextMenu("TestDash")]
-        public void TryDash()
+        private void TryDash()
         {
-            Vector3 finalDashPos = transform.position + transform.forward.normalized 
-                                   * MainController.Inst.globalParams.cubeDashSpeed
-                                   * MainController.Inst.globalParams.cubeDashTime;
+            Vector3 finalDashPos = transform.position + transform.forward.normalized
+                * MainController.Inst.globalParams.cubeDashSpeed
+                * MainController.Inst.globalParams.cubeDashTime;
             if (PlayGroundController.Inst.IsThisPointOnPlayground(finalDashPos))
             {
                 SetState(CubeStates.dashing);
-                //PlayGroundController.Inst.TestPoint(finalDashPos);    // temp
             }
         }
 
-        void Update()
+        private void Update()
         {
             UpdateState();
-            
         }
 
         private void MoveAndRotate(bool isRotateNeeded = true)
         {
             if (isRotateNeeded)
             {
-                var direction = _currentDestination - transform.position;
-                var needRotate = Quaternion.LookRotation(direction);
-                var currentRotate = Quaternion.Lerp(Quaternion.Euler(transform.eulerAngles), 
+                Vector3 direction = _currentDestination - transform.position;
+                Quaternion needRotate = Quaternion.LookRotation(direction);
+                Quaternion currentRotate = Quaternion.Lerp(Quaternion.Euler(transform.eulerAngles),
                     Quaternion.Euler(needRotate.eulerAngles), _currentRotationSpeed * Time.deltaTime);
                 transform.eulerAngles = currentRotate.eulerAngles;
             }
+
             transform.position += transform.forward.normalized * _currentSpeed * Time.deltaTime;
         }
 
         private void CalculateRotationSpeedByDistance()
         {
-            
-            float dis = Vector3.Distance(transform.position, _currentDestination); 
+            float dis = Vector3.Distance(transform.position, _currentDestination);
             if (dis > MainController.Inst.globalParams.cubeTheorDisToCalculateRotation)
             {
                 _currentRotationSpeed = MainController.Inst.globalParams.cubeNormalRotationSpeed;
@@ -135,9 +123,7 @@ namespace Assets.Scripts {
                     break;
                 case CubeStates.dashing:
                     _currentSpeed = MainController.Inst.globalParams.cubeDashSpeed;
-                    _dashCountdownTimer.Setup(MainController.Inst.globalParams.cubeDashTime, () => {
-                        SetState(CubeStates.moving);
-                    });
+                    _dashCountdownTimer.Setup(MainController.Inst.globalParams.cubeDashTime, () => { SetState(CubeStates.moving); });
                     break;
                 case CubeStates.destroying:
                     break;
@@ -147,6 +133,7 @@ namespace Assets.Scripts {
                 default:
                     break;
             }
+
             _currentState = newState;
         }
 
@@ -193,7 +180,7 @@ namespace Assets.Scripts {
 
         private void Destruction()
         {
-            _cubeController.RecreateCube(this);
+            CubeController.Inst.RecreateCube(this);
             Reset();
             PoolManager.Inst.PutCubeToPool(this);
         }

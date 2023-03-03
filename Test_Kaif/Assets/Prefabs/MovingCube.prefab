@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 4567624698354218696}
   - component: {fileID: 5442965393724479476}
   - component: {fileID: 2721583140968227188}
-  - component: {fileID: 8787449262825078006}
   m_Layer: 0
   m_Name: CubeView
   m_TagString: Untagged
@@ -84,19 +83,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &8787449262825078006
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2356217211719682197}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 0
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &4318569568098683616
 GameObject:
   m_ObjectHideFlags: 0
@@ -142,8 +128,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e7f56e547b9f54b4bbe6b36801e231ef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _speed: 40
-  _speedRotate: 30
-  _dashSpeed: 90
-  _dashTime: 0.5
-  _currentDestination: {x: 0, y: 0, z: 0}
+  _currentState: 0

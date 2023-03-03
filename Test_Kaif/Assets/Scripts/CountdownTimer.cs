@@ -1,14 +1,12 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class CountdownTimer
 {
-    private bool _isCountingAllowed = false;
+    private bool _isCountingAllowed;
     private float _countdownTime;
-    private Action _finalAct;           //  action in the end of timer
-    private Action<float> _timerAct;           //  action for time changing
+    private Action _finalAct; 
+    private Action<float> _timerAct; 
 
     public void Setup(float time, Action closureAction)
     {
@@ -25,10 +23,10 @@ public class CountdownTimer
         _isCountingAllowed = false;
     }
 
-   public void SubscribeForTime(Action<float> act)
-   {
-       _timerAct += act;
-   }
+    public void SubscribeForTime(Action<float> act)
+    {
+        _timerAct += act;
+    }
 
     public void Countdown()
     {
@@ -41,9 +39,8 @@ public class CountdownTimer
                 _isCountingAllowed = false;
                 _finalAct?.Invoke();
             }
+
             _timerAct?.Invoke(_countdownTime);
         }
     }
-
-
 }

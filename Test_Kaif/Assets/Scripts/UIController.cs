@@ -20,8 +20,9 @@ public class UIController : MonoBehaviour
         }
     }
 
-    void Start()
+    public void Setup()
     {
+        _ballsPanelUI.Setup();
         BallController.Inst.SubscribeForBallsAmount(ShowAvailableBalls);
         CubeController.Inst.SubscribeForDestroyedCubesCount(ChangeScoreView);
     }

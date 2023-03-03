@@ -6,12 +6,14 @@ using UnityEngine;
 public class PoolManager : MonoBehaviour
 {
     public static PoolManager Inst;
-    private static Stack<Ball> _ballStack;
-    private static Stack<MovingCube> _cubeStack;
-    private static Transform _parentForDeactivatedGO;
+
+    private Stack<Ball> _ballStack;
+    private Stack<MovingCube> _cubeStack;
+    private Transform _parentForDeactivatedGO;
+
     public Transform parentGO;
 
-    void Awake()
+    private void Awake()
     {
         if (Inst == null)
         {
@@ -19,7 +21,7 @@ public class PoolManager : MonoBehaviour
         }
     }
 
-    public void Start()
+    private void Start()
     {
         _parentForDeactivatedGO = parentGO;
         _ballStack = new Stack<Ball>();
@@ -65,6 +67,5 @@ public class PoolManager : MonoBehaviour
         target.gameObject.SetActive(false);
         _cubeStack.Push(target);
     }
-
 }
 

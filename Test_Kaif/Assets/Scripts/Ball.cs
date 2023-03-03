@@ -8,6 +8,15 @@ public class Ball : MonoBehaviour
     private Vector3 _endPosition;
     private Vector3 _helpingPos = Vector3.zero;
     private Action _actOnLanding;
+    
+    public void SetDestination(Vector3 startPos, Vector3 endPos, Action actOnLanding)
+    {
+        transform.position = startPos;
+        _startPosition = startPos;
+        _endPosition = endPos;
+        _actOnLanding += actOnLanding;
+        gameObject.SetActive(true);
+    }
 
     public void Reset()
     {
@@ -16,15 +25,6 @@ public class Ball : MonoBehaviour
         _startPosition = Vector3.zero;
         _endPosition = Vector3.zero;
         _actOnLanding = null;
-    }
-
-    public void SetDestination(Vector3 startPos, Vector3 endPos, Action actOnLanding)
-    {
-        transform.position = startPos;
-        _startPosition = startPos;
-        _endPosition = endPos;
-        _actOnLanding += actOnLanding;
-        gameObject.SetActive(true);
     }
 
     private void Update()
@@ -54,13 +54,13 @@ public class Ball : MonoBehaviour
         float fullDistance = Vector3.Distance(startPos, endPos);
         float currentDistance = Vector3.Distance(currentPos, startPos);
         float factor = currentDistance / fullDistance;
-        _helpingPos.y = MainController.Inst.globalParams.ballAmplitude * (factor < 0.5f ? EaseOutQuart(factor) : 1- EaseInQuart(factor));
+        _helpingPos.y = MainController.Inst.globalParams.ballAmplitude * (factor < 0.5f ? EaseOutQuart(factor) : 1 - EaseInQuart(factor));
         _ballView.localPosition = _helpingPos;
     }
 
     private float EaseOutQuart(float x)
     {
-        double d = (double) x;
+        double d = x;
         return (float) (1 - Math.Pow(1 - d, 4));
     }
 

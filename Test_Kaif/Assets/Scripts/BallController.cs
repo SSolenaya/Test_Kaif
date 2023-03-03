@@ -1,37 +1,38 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Numerics;
 using Assets.Scripts;
 using UnityEngine;
-using Vector3 = UnityEngine.Vector3;
 
 public class BallController : MonoBehaviour
 {
     public static BallController Inst;
+
     [SerializeField] private RaycastController _raycastController;
     [SerializeField] private Ball _ballPrefab;
-    [SerializeField] private Transform _spawnPoint;                         //  ball spawning point
+    [SerializeField] private Transform _spawnPoint;
+
     private bool _isBallReady = true;
-    private CountdownTimer _coolDownTimer = new CountdownTimer();           // for shoots
+    private CountdownTimer _shootTimer = new CountdownTimer();
     private CountdownTimer _ballCreatingTimer = new CountdownTimer();
+
     private Action<int> _onBallsAmountChange;
     private int _ballCounter;
+
     public int BallCounter
     {
         get => _ballCounter;
         set
         {
-            _ballCounter = value > 5 ? 5: value;
+            _ballCounter = value > 5 ? 5 : value;
             if (_ballCounter < 5)
             {
                 _ballCreatingTimer.Setup(MainController.Inst.globalParams.coolDownForNewBall, () => BallCounter++);
             }
+
             _onBallsAmountChange?.Invoke(BallCounter);
         }
     }
 
-    void Awake()
+    private void Awake()
     {
         if (Inst == null)
         {
@@ -39,11 +40,10 @@ public class BallController : MonoBehaviour
         }
     }
 
-
-    void Start()
+    public void Setup()
     {
         _raycastController.SubscribeForFindingTarget(ShootBall);
-        BallCounter = 1;
+        BallCounter = MainController.Inst.globalParams.startBallsAmount;
         _ballCreatingTimer.SubscribeForTime(UIController.Inst.ChangeTimerToNextBall);
     }
 
@@ -54,20 +54,19 @@ public class BallController : MonoBehaviour
             return;
         }
 
-        var ball = PoolManager.Inst.GetBallFromPull(_ballPrefab);
+        Ball ball = PoolManager.Inst.GetBallFromPull(_ballPrefab);
         ball.transform.SetParent(_spawnPoint);
         Vector3 endPos = raycastHit.point;
         ball.SetDestination(_spawnPoint.position, endPos,
             () => CubeController.Inst.CheckDestroyingCubes(endPos, MainController.Inst.globalParams.ballRadiusOfBlast));
         BallCounter--;
         _isBallReady = false;
-        _coolDownTimer.Setup(MainController.Inst.globalParams.coolDownForShoot, () => _isBallReady = true); 
+        _shootTimer.Setup(MainController.Inst.globalParams.coolDownForShoot, () => _isBallReady = true);
     }
 
-
-    void Update()
+    private void Update()
     {
-        _coolDownTimer.Countdown();
+        _shootTimer.Countdown();
         _ballCreatingTimer.Countdown();
     }
 

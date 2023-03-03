@@ -9,6 +9,7 @@ public class GlobalParamsSO : ScriptableObject
     public float ballRadiusOfBlast = 60f;                       //  radius for blast of ball  - cubes are destroying within this zone
     public float coolDownForShoot = 3f;                         //  cooldown before next shoot
     public float coolDownForNewBall = 6f;                       //  cooldown before next ball
+    public int startBallsAmount = 3;                            //  start balls
     public int maxBallsAmount = 5;                              //  max available amount of balls
 
     public float minRecreatingCubeTime = 1f;                    //  min time before new cube will be created 
@@ -29,4 +30,6 @@ public class GlobalParamsSO : ScriptableObject
 
     public float ballSpeed = 180f;
     public float ballAmplitude = 120f;                          //  for parabolic flight  
+
+    public float boardMapOffset = 40f;                          //  map boarder offset
 }

@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class MainController : MonoBehaviour
@@ -8,11 +6,17 @@ public class MainController : MonoBehaviour
 
     public GlobalParamsSO globalParams;
 
-    void Awake()
+    private void Awake()
     {
         if (Inst == null)
         {
             Inst = this;
         }
+    }
+
+    public void Start()
+    {
+        UIController.Inst.Setup();
+        BallController.Inst.Setup();
     }
 }

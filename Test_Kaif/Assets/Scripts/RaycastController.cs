@@ -9,7 +9,7 @@ public class RaycastController : MonoBehaviour
     [SerializeField] private ClickObserver _clickObserver;
     private Action<RaycastHit> _onFindingTarget;
 
-    void Start()
+    private void Start()
     {
         _clickObserver.SubscribeForClick(CastRay);
     }

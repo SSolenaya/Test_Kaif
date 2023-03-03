@@ -4,11 +4,9 @@ using UnityEngine;
 public class Ball : MonoBehaviour
 {
     [SerializeField] private Transform _ballView;
-    private float _speed = 180f;
     private Vector3 _startPosition;
     private Vector3 _endPosition;
     private Vector3 _helpingPos = Vector3.zero;
-    private readonly float _amplitude = 120f;
     private Action _actOnLanding;
 
 
@@ -27,7 +25,7 @@ public class Ball : MonoBehaviour
 
     private void Movement()
     {
-        transform.position = Vector3.MoveTowards(transform.position, _endPosition, Time.deltaTime * _speed);
+        transform.position = Vector3.MoveTowards(transform.position, _endPosition, Time.deltaTime * MainController.Inst.globalParams.ballSpeed);
         CalculateViewBall(_startPosition, _endPosition, transform.position);
     }
 
@@ -45,7 +43,7 @@ public class Ball : MonoBehaviour
         float fullDistance = Vector3.Distance(startPos, endPos);
         float currentDistance = Vector3.Distance(currentPos, startPos);
         float factor = currentDistance / fullDistance;
-        _helpingPos.y = _amplitude * (factor < 0.5f ? EaseOutQuart(factor) : 1- EaseInQuart(factor));
+        _helpingPos.y = MainController.Inst.globalParams.ballAmplitude * (factor < 0.5f ? EaseOutQuart(factor) : 1- EaseInQuart(factor));
         _ballView.localPosition = _helpingPos;
     }
 

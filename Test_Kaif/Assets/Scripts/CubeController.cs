@@ -1,5 +1,7 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 using Vector3 = UnityEngine.Vector3;
 
 namespace Assets.Scripts {
@@ -10,10 +12,18 @@ namespace Assets.Scripts {
         [SerializeField] private MovingCube _cubeGO;    //  temp
         [SerializeField] private List<MovingCube> _cubesList = new List<MovingCube>();
         [SerializeField] private Transform rootCube;
-        private float _minRecreatingCubeTime = 1f;                               //  TODO: move to SO or Config
-        private float _maxRecreatingCubeTime = 3f;
-        private int _cubeAmount = 3;                                             //  TODO: move to SO or Config
         private List<CountdownTimer> _timersList = new List<CountdownTimer>();
+        private Action<int> _onCubeDestroyCount;
+        private int _destroyedCubesCounter;
+        public int DestroyedCubesCounter
+        {
+            get => _destroyedCubesCounter;
+            set
+            {
+                _destroyedCubesCounter = value;
+                _onCubeDestroyCount.Invoke(_destroyedCubesCounter);
+            }
+        }
 
         void Awake()
         {
@@ -25,7 +35,7 @@ namespace Assets.Scripts {
 
         public void Start()
         {
-            for (int i = 0; i < _cubeAmount; i++)
+            for (int i = 0; i < MainController.Inst.globalParams.cubeAmount; i++)
             {
                 CreateCube();
             }
@@ -61,8 +71,9 @@ namespace Assets.Scripts {
 
         public void RecreateCube(MovingCube oldCube)
         {
+            DestroyedCubesCounter++;
             _cubesList.Remove(oldCube);
-            float t = Random.Range(_minRecreatingCubeTime, _maxRecreatingCubeTime);
+            float t = Random.Range(MainController.Inst.globalParams.minRecreatingCubeTime, MainController.Inst.globalParams.maxRecreatingCubeTime);
             CountdownTimer timer = new CountdownTimer();
             timer.Setup(t, CreateCube);
             _timersList.Add(timer);
@@ -77,6 +88,11 @@ namespace Assets.Scripts {
                     cube.SetDestroyingState();
                 }
             }
+        }
+
+        public void SubscribeForDestroyedCubesCount(Action<int> act)
+        {
+            _onCubeDestroyCount += act;
         }
     }
 }

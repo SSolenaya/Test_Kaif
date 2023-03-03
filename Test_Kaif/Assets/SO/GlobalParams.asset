@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ff46e95fa7da85b44b77d3e25dd6cb73, type: 3}
+  m_Name: GlobalParams
+  m_EditorClassIdentifier: 
+  ballRadiusOfBlast: 60
+  coolDownForShoot: 0.5
+  coolDownForNewBall: 1
+  maxBallsAmount: 5
+  minRecreatingCubeTime: 1
+  maxRecreatingCubeTime: 3
+  cubeAmount: 3
+  cubeDashSpeed: 100
+  cubeNormalSpeed: 50
+  cubeNormalRotationSpeed: 5
+  cubeMaxRotationSpeed: 50
+  cubeDashDeltaMinTime: 3
+  cubeDashDeltaMaxTime: 6
+  cubeDashTime: 0.5
+  cubeDistance: 0.5
+  cubeTheorDisToCalculateRotation: 15
+  cubeMinRadiusForNewPoint: 80
+  ballSpeed: 350
+  ballAmplitude: 150

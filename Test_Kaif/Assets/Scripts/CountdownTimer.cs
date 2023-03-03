@@ -10,11 +10,11 @@ public class CountdownTimer
     private Action _act;
 
    public void Setup(float time, Action closureAction)
-    {
+   {
         _countdownTime = time;
         _act = closureAction;
         _isCountingAllowed = true;
-    }
+   }
 
     public void Countdown()
     {
